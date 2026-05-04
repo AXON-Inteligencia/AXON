@@ -41,7 +41,7 @@ async function main() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.resolve(import.meta.dirname, "../public");
+    const distPath = path.resolve(import.meta.dirname, "public");
     if (fs.existsSync(distPath)) {
       app.use(express.static(distPath));
       app.get("*", (_req, res) => {
