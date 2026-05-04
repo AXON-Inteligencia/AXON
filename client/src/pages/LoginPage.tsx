@@ -30,6 +30,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   return (
     <div className="login-page">
       <div className="login-bg" />
+      <div className="cyber-scanlines" />
+      <div className="cyber-hex-overlay" />
 
       <div className="login-stats-left">
         <div className="stat-card">
