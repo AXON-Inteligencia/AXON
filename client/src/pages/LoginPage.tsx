@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { trpc } from "../lib/trpc";
 import { Eye, EyeOff, Lock, Mail, ArrowRight } from "lucide-react";
+import MatrixRain from "../components/MatrixRain";
 
 interface LoginPageProps {
   onLogin: (token: string) => void;
@@ -30,8 +31,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   return (
     <div className="login-page">
       <div className="login-bg" />
+      <MatrixRain />
       <div className="cyber-scanlines" />
-      <div className="cyber-hex-overlay" />
 
       <div className="login-stats-left">
         <div className="stat-card">

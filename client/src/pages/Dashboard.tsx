@@ -5,6 +5,7 @@ import AppCards from "../components/AppCards";
 import CreateAppModal from "../components/CreateAppModal";
 import TransportPanel from "../components/TransportPanel";
 import LinkShortener from "../components/LinkShortener";
+import MatrixRain from "../components/MatrixRain";
 
 interface DashboardProps {
   onLogout: () => void;
@@ -57,6 +58,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
 
       <main className="dashboard-main">
         <div className="dashboard-bg" />
+        <MatrixRain />
 
         <div className="dashboard-content">
           {activeView === "transportadora" ? (
