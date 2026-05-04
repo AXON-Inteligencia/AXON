@@ -72,9 +72,9 @@ export default function Dashboard({ onLogout }: DashboardProps) {
               <div className="logo-container">
                 <div className="logo-wings" />
                 <h1 className="logo-text">
-                  ALZEN
+                  CONEXAO
                   <br />
-                  MOTA
+                  GANGSTA
                 </h1>
               </div>
             </>

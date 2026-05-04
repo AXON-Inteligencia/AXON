@@ -156,7 +156,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           <p className="login-support">
             Contato com administrador &rarr;{" "}
             <a href="#" className="support-link">
-              @AlzenMota
+              @ConexaoGangsta
             </a>
           </p>
         </div>

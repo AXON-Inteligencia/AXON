@@ -1,4 +1,4 @@
-# Dashboard Multi App — Alzen Mota
+# Dashboard Multi App — Conexao Gangsta
 
 Dashboard de gerenciamento de aplicativos com design cyberpunk neon. Construida com React 19, Express, tRPC e SQLite.
 
