@@ -126,7 +126,7 @@ const authRouter = t.router({
 const appsRouter = t.router({
   list: protectedProcedure.query(async ({ ctx }) => {
     const rawApps = await listApps(ctx.userId);
-    return rawApps.map((app) => ({
+    return rawApps.map((app: any) => ({
       ...app,
       images: JSON.parse(app.images) as string[],
     }));

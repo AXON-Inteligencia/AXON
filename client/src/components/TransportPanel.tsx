@@ -149,7 +149,7 @@ function ClientesTab() {
         <p className="empty-text">Nenhum cliente cadastrado.</p>
       ) : (
         <div className="clients-list">
-          {clientsQuery.data?.map((client) => (
+          {clientsQuery.data?.map((client: any) => (
             <div key={client.id} className="client-card">
               <div className="client-info">
                 <strong>{client.name}</strong>

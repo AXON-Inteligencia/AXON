@@ -1,6 +1,8 @@
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
+import initSqlJs from "sql.js";
+import { drizzle } from "drizzle-orm/sql-js";
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import fs from "node:fs";
+import path from "node:path";
 
 export const users = sqliteTable("users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -53,9 +55,46 @@ export const trackingConfigs = sqliteTable("tracking_configs", {
     .references(() => users.id),
 });
 
-const sqlite = new Database("dashboard.db");
-sqlite.pragma("journal_mode = WAL");
+const DB_PATH = path.resolve("dashboard.db");
 
-export const db = drizzle(sqlite, {
-  schema: { users, apps, clients, trackingConfigs },
-});
+let sqliteDb: any;
+
+function loadDatabase() {
+  const SQL = (initSqlJs as any).default ?? initSqlJs;
+  return SQL().then((SqlJs: any) => {
+    let database: any;
+    if (fs.existsSync(DB_PATH)) {
+      const fileBuffer = fs.readFileSync(DB_PATH);
+      database = new SqlJs.Database(fileBuffer);
+    } else {
+      database = new SqlJs.Database();
+    }
+    return database;
+  });
+}
+
+function saveDatabase() {
+  if (sqliteDb) {
+    const data = sqliteDb.export();
+    const buffer = Buffer.from(data);
+    fs.writeFileSync(DB_PATH, buffer);
+  }
+}
+
+let db: any;
+
+export async function getDb() {
+  if (!db) {
+    sqliteDb = await loadDatabase();
+    db = drizzle(sqliteDb, {
+      schema: { users, apps, clients, trackingConfigs },
+    });
+  }
+  return db;
+}
+
+export function persistDb() {
+  saveDatabase();
+}
+
+export { db };
