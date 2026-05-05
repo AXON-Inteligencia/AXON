@@ -22,18 +22,14 @@ const CODE_CHARS = [
 const COLORS = [
   "#ff1e1e",   // red
   "#ff4444",   // light red
-  "#06b6d4",   // cyan
-  "#22d3ee",   // light cyan
-  "#8b5cf6",   // purple
-  "#a78bfa",   // light purple
-  "#22c55e",   // green
-  "#4ade80",   // light green
-  "#c8a864",   // gold
+  "#ff6b35",   // orange-red
+  "#c89632",   // gold
+  "#daa520",   // dark gold
   "#f59e0b",   // amber
-  "#3b82f6",   // blue
-  "#60a5fa",   // light blue
-  "#f472b6",   // pink
-  "#e879f9",   // magenta
+  "#e8a030",   // warm amber
+  "#ff3030",   // bright red
+  "#cc2020",   // dark red
+  "#b8860b",   // dark goldenrod
 ];
 
 interface Column {
