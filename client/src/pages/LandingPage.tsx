@@ -35,7 +35,7 @@ export default function LandingPage({ onGoToLogin }: LandingPageProps) {
       {/* Hero Section */}
       <section id="hero" className="landing-hero">
         <div className="hero-bg">
-          <img src="/images/hacker-spy.jpg" alt="" className="hero-bg-img" />
+          <img src="/images/hacker-bg-new.png" alt="" className="hero-bg-img" />
           <div className="hero-overlay" />
         </div>
 
