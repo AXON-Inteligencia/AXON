@@ -493,7 +493,7 @@ body {
 .dashboard-bg {
   position: absolute;
   inset: 0;
-  background: url('/images/hacker-bg.jpg') center center / cover no-repeat;
+  background: url('/images/hacker-spy.jpg') center center / cover no-repeat;
   animation: bgZoom 30s ease-in-out infinite alternate;
 }
 
