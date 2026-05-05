@@ -42,8 +42,8 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 50% 50%, transparent 30%, rgba(0, 0, 0, 0.4) 100%),
-    linear-gradient(180deg, rgba(5, 5, 16, 0.15) 0%, rgba(5, 5, 16, 0.1) 40%, rgba(5, 5, 16, 0.3) 100%);
+    radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(0, 0, 0, 0.25) 100%),
+    linear-gradient(180deg, rgba(5, 5, 16, 0.05) 0%, rgba(5, 5, 16, 0.05) 60%, rgba(5, 5, 16, 0.15) 100%);
   pointer-events: none;
 }
 
@@ -502,8 +502,8 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 50% 50%, transparent 30%, rgba(0, 0, 0, 0.35) 100%),
-    linear-gradient(180deg, rgba(5, 5, 16, 0.15) 0%, rgba(5, 5, 16, 0.1) 40%, rgba(5, 5, 16, 0.3) 100%);
+    radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(0, 0, 0, 0.2) 100%),
+    linear-gradient(180deg, rgba(5, 5, 16, 0.05) 0%, rgba(5, 5, 16, 0.05) 60%, rgba(5, 5, 16, 0.1) 100%);
   pointer-events: none;
 }
 
