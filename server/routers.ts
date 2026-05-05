@@ -22,6 +22,9 @@ import {
   getTrackingConfig,
   upsertTrackingConfig,
   registerUser,
+  getAppById,
+  getClientByOrderNumber,
+  getTrackingConfigByUserId,
 } from "./db.ts";
 import * as jose from "jose";
 
@@ -132,6 +135,17 @@ const appsRouter = t.router({
     }));
   }),
 
+  getById: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input }) => {
+      const app = await getAppById(input.id);
+      if (!app) return null;
+      return {
+        ...app,
+        images: JSON.parse(app.images) as string[],
+      };
+    }),
+
   create: protectedProcedure
     .input(createAppSchema)
     .mutation(async ({ ctx, input }) => {
@@ -156,6 +170,14 @@ const clientsRouter = t.router({
     return listClients(ctx.userId);
   }),
 
+  getByOrderNumber: publicProcedure
+    .input(z.object({ orderNumber: z.string() }))
+    .query(async ({ input }) => {
+      const client = await getClientByOrderNumber(input.orderNumber);
+      if (!client) return null;
+      return client;
+    }),
+
   create: protectedProcedure
     .input(createClientSchema)
     .mutation(async ({ ctx, input }) => {
@@ -173,6 +195,12 @@ const trackingRouter = t.router({
   getConfig: protectedProcedure.query(async ({ ctx }) => {
     return getTrackingConfig(ctx.userId);
   }),
+
+  getPublicConfig: publicProcedure
+    .input(z.object({ userId: z.number() }))
+    .query(async ({ input }) => {
+      return getTrackingConfigByUserId(input.userId);
+    }),
 
   saveConfig: protectedProcedure
     .input(trackingConfigSchema)

@@ -56,7 +56,9 @@ function ClientesTab() {
 
   const generateOrderNumber = () => {
     const num = Math.floor(Math.random() * 900000000) + 100000000;
-    setOrderNumber(num.toString());
+    const numStr = num.toString();
+    setOrderNumber(numStr);
+    setTrackingLink(`${window.location.origin}/rastreio/${numStr}`);
   };
 
   const copyTrackingLink = () => {

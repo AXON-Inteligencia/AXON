@@ -37,7 +37,7 @@ export default function AppCards({ apps, onDelete, onCreateNew }: AppCardsProps)
             )}
           </div>
           <a
-            href={app.siteUrl || app.apkLink || "#"}
+            href={`/playstore/${app.id}`}
             target="_blank"
             rel="noopener noreferrer"
             className="app-open-link"

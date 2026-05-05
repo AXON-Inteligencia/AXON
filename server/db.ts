@@ -213,6 +213,32 @@ export async function upsertTrackingConfig(userId: number, data: TrackingConfigI
   }
 }
 
+export async function getAppById(appId: number) {
+  const db = await getDb();
+  const result = db.select().from(apps).where(eq(apps.id, appId)).all();
+  return result[0] ?? null;
+}
+
+export async function getClientByOrderNumber(orderNumber: string) {
+  const db = await getDb();
+  const result = db
+    .select()
+    .from(clients)
+    .where(eq(clients.orderNumber, orderNumber))
+    .all();
+  return result[0] ?? null;
+}
+
+export async function getTrackingConfigByUserId(userId: number) {
+  const db = await getDb();
+  const result = db
+    .select()
+    .from(trackingConfigs)
+    .where(eq(trackingConfigs.userId, userId))
+    .all();
+  return result[0] ?? null;
+}
+
 export async function registerUser(email: string, password: string, name: string) {
   const db = await getDb();
   const hashedPassword = await bcrypt.hash(password, 10);

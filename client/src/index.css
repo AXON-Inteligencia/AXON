@@ -1302,3 +1302,716 @@ body {
     height: 80px;
   }
 }
+
+/* ================================================================
+   PLAY STORE PAGE
+   ================================================================ */
+.playstore-page {
+  min-height: 100vh;
+  background: #fff;
+  color: #202124;
+  font-family: "Google Sans", "Roboto", Arial, sans-serif;
+}
+
+.playstore-loading {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: #202124;
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+.playstore-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #1a73e8;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Header */
+.ps-header {
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.ps-header-inner {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.ps-logo {
+  height: 24px;
+}
+
+.ps-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.ps-nav-item {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #5f6368;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.ps-nav-item:hover {
+  background: #f1f3f4;
+}
+
+.ps-nav-active {
+  color: #1a73e8;
+  background: #e8f0fe;
+  font-weight: 500;
+}
+
+/* Content */
+.ps-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.ps-main {
+  max-width: 900px;
+}
+
+/* App Header */
+.ps-app-header {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.ps-app-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.ps-app-info {
+  flex: 1;
+}
+
+.ps-app-name {
+  font-size: 28px;
+  font-weight: 500;
+  color: #202124;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.ps-app-developer {
+  font-size: 14px;
+  color: #1a73e8;
+  margin-bottom: 4px;
+}
+
+.ps-app-badges {
+  font-size: 12px;
+  color: #5f6368;
+}
+
+/* Stats */
+.ps-stats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 16px 0;
+  margin-bottom: 16px;
+}
+
+.ps-stat {
+  text-align: center;
+  padding: 0 24px;
+}
+
+.ps-stat-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: #202124;
+}
+
+.ps-stat-label {
+  font-size: 12px;
+  color: #5f6368;
+  margin-top: 2px;
+}
+
+.ps-stat-divider {
+  width: 1px;
+  height: 32px;
+  background: #dadce0;
+}
+
+.ps-rating-badge {
+  display: inline-block;
+  border: 1px solid #5f6368;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Install Button */
+.ps-install-btn {
+  width: 100%;
+  max-width: 300px;
+  padding: 12px 24px;
+  background: #01875f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background 0.2s;
+}
+
+.ps-install-btn:hover {
+  background: #016d4d;
+}
+
+.ps-share-row {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: #5f6368;
+  margin-bottom: 8px;
+}
+
+.ps-share-row span {
+  cursor: pointer;
+}
+
+.ps-available {
+  font-size: 12px;
+  color: #5f6368;
+  margin-bottom: 24px;
+}
+
+/* Screenshots */
+.ps-screenshots {
+  position: relative;
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+
+.ps-screenshot-track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 8px 0;
+  scroll-behavior: smooth;
+}
+
+.ps-screenshot {
+  height: 300px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.ps-carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #dadce0;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5f6368;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.ps-carousel-prev { left: 4px; }
+.ps-carousel-next { right: 4px; }
+
+.ps-no-images {
+  padding: 24px;
+  text-align: center;
+  color: #5f6368;
+  font-size: 14px;
+  margin-bottom: 32px;
+}
+
+/* About */
+.ps-about, .ps-whats-new {
+  padding: 24px 0;
+  border-top: 1px solid #dadce0;
+}
+
+.ps-section-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #202124;
+  margin-bottom: 12px;
+}
+
+.ps-about-text {
+  font-size: 14px;
+  color: #5f6368;
+  line-height: 1.6;
+}
+
+/* Safety */
+.ps-safety {
+  padding: 24px 0;
+  border-top: 1px solid #dadce0;
+}
+
+.ps-safety-intro {
+  font-size: 13px;
+  color: #5f6368;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.ps-safety-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ps-safety-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  color: #202124;
+}
+
+.ps-safety-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* Reviews */
+.ps-reviews {
+  padding: 24px 0;
+  border-top: 1px solid #dadce0;
+}
+
+.ps-rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.ps-rating-big {
+  font-size: 48px;
+  font-weight: 400;
+  color: #202124;
+}
+
+.ps-rating-stars {
+  font-size: 18px;
+  color: #fbbf24;
+}
+
+.ps-rating-count {
+  font-size: 13px;
+  color: #5f6368;
+}
+
+.ps-review {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.ps-review:last-child {
+  border-bottom: none;
+}
+
+.ps-review-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.ps-review-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e8eaed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #5f6368;
+}
+
+.ps-review-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #202124;
+}
+
+.ps-review-stars {
+  font-size: 12px;
+  color: #fbbf24;
+}
+
+.ps-review-text {
+  font-size: 14px;
+  color: #5f6368;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.ps-review-helpful {
+  font-size: 12px;
+  color: #80868b;
+}
+
+/* Similar Apps */
+.ps-similar {
+  padding: 24px 0;
+  border-top: 1px solid #dadce0;
+}
+
+.ps-similar-grid {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 8px 0;
+}
+
+.ps-similar-app {
+  min-width: 120px;
+  text-align: center;
+}
+
+.ps-similar-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: #f1f3f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 8px;
+}
+
+.ps-similar-name {
+  font-size: 12px;
+  color: #202124;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ps-similar-rating {
+  font-size: 11px;
+  color: #5f6368;
+}
+
+/* Footer */
+.ps-footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 12px;
+  color: #5f6368;
+  border-top: 1px solid #dadce0;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .ps-app-header {
+    gap: 16px;
+  }
+
+  .ps-app-icon {
+    width: 64px;
+    height: 64px;
+  }
+
+  .ps-app-name {
+    font-size: 22px;
+  }
+
+  .ps-nav {
+    display: none;
+  }
+
+  .ps-stat {
+    padding: 0 16px;
+  }
+
+  .ps-screenshot {
+    height: 200px;
+  }
+}
+
+/* ================================================================
+   RASTREIO PAGE
+   ================================================================ */
+.rastreio-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  padding: 24px;
+  font-family: "Inter", "Roboto", Arial, sans-serif;
+}
+
+.rastreio-loading {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  color: #94a3b8;
+  font-family: "Inter", "Roboto", Arial, sans-serif;
+}
+
+.rastreio-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #334155;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.rastreio-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.rastreio-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.rastreio-info {
+  margin-bottom: 24px;
+}
+
+.rastreio-field {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #334155;
+}
+
+.rastreio-label {
+  font-size: 13px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.rastreio-value {
+  font-size: 13px;
+  color: #f1f5f9;
+  font-weight: 600;
+}
+
+/* Tracking Steps */
+.rastreio-steps {
+  margin-bottom: 24px;
+}
+
+.rastreio-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 12px 0;
+  position: relative;
+}
+
+.rastreio-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 30px;
+  bottom: -4px;
+  width: 2px;
+  background: #334155;
+}
+
+.rastreio-step.completed:not(:last-child)::after {
+  background: #22c55e;
+}
+
+.rastreio-step-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #475569;
+  background: #1e293b;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.rastreio-step.completed .rastreio-step-dot {
+  background: #22c55e;
+  border-color: #22c55e;
+}
+
+.rastreio-step.active .rastreio-step-dot {
+  background: #f59e0b;
+  border-color: #f59e0b;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); }
+  50% { box-shadow: 0 0 16px rgba(245, 158, 11, 0.6); }
+}
+
+.rastreio-step-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.rastreio-step.completed .rastreio-step-title {
+  color: #22c55e;
+}
+
+.rastreio-step.active .rastreio-step-title {
+  color: #f59e0b;
+}
+
+.rastreio-step-desc {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.rastreio-action-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.rastreio-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+}
+
+/* Payment Screen */
+.rastreio-payment-card {
+  text-align: center;
+}
+
+.rastreio-payment-icon {
+  margin-bottom: 16px;
+}
+
+.rastreio-payment-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 12px;
+}
+
+.rastreio-payment-msg {
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.rastreio-pix-box {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  word-break: break-all;
+}
+
+.rastreio-pix-label {
+  font-size: 13px;
+  color: #94a3b8;
+  font-family: monospace;
+}
+
+.rastreio-copy-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: transform 0.2s;
+}
+
+.rastreio-copy-btn:hover {
+  transform: translateY(-1px);
+}
+
+.rastreio-link {
+  font-size: 13px;
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.rastreio-link:hover {
+  text-decoration: underline;
+}
