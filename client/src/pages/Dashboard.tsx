@@ -95,8 +95,6 @@ export default function Dashboard({ onLogout }: DashboardProps) {
             <ActivityLog />
           ) : (
             <>
-              <StatsCards />
-
               <AppCards
                 apps={appsQuery.data ?? []}
                 onDelete={handleDeleteApp}
@@ -111,6 +109,8 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                   GANGSTA
                 </h1>
               </div>
+
+              <StatsCards />
             </>
           )}
         </div>
