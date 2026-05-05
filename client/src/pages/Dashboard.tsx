@@ -110,9 +110,12 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                 </h1>
               </div>
 
-              <StatsCards />
             </>
           )}
+        </div>
+
+        <div className="stats-footer">
+          <StatsCards />
         </div>
 
         {showCreateModal && (
