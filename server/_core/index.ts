@@ -16,6 +16,10 @@ async function main() {
   const app = express();
   app.use(express.json());
 
+  app.get("/api/health", (_req, res) => {
+    res.json({ status: "ok", timestamp: Date.now() });
+  });
+
   app.use(
     "/api/trpc",
     createExpressMiddleware({
@@ -49,10 +53,6 @@ async function main() {
       });
     }
   }
-
-  app.get("/api/health", (_req, res) => {
-    res.json({ status: "ok", timestamp: Date.now() });
-  });
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);
