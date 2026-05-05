@@ -55,6 +55,32 @@ export const trackingConfigs = sqliteTable("tracking_configs", {
     .references(() => users.id),
 });
 
+export const activityLogs = sqliteTable("activity_logs", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  action: text("action").notNull(),
+  details: text("details").notNull().default(""),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  createdAt: text("created_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+});
+
+export const notifications = sqliteTable("notifications", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  message: text("message").notNull(),
+  type: text("type").notNull().default("info"),
+  read: integer("read").notNull().default(0),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  createdAt: text("created_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+});
+
 const DB_PATH = path.resolve("dashboard.db");
 
 let sqliteDb: any;
@@ -87,7 +113,7 @@ export async function getDb() {
   if (!db) {
     sqliteDb = await loadDatabase();
     db = drizzle(sqliteDb, {
-      schema: { users, apps, clients, trackingConfigs },
+      schema: { users, apps, clients, trackingConfigs, activityLogs, notifications },
     });
   }
   return db;

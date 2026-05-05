@@ -6,22 +6,36 @@ import CreateAppModal from "../components/CreateAppModal";
 import TransportPanel from "../components/TransportPanel";
 import LinkShortener from "../components/LinkShortener";
 import MatrixRain from "../components/MatrixRain";
+import StatsCards from "../components/StatsCards";
+import ProfileModal from "../components/ProfileModal";
+import NotificationPanel from "../components/NotificationPanel";
+import ActivityLog from "../components/ActivityLog";
 
 interface DashboardProps {
   onLogout: () => void;
 }
 
-type ActiveView = "dashboard" | "playstore" | "transportadora" | "encurtador";
+type ActiveView = "dashboard" | "playstore" | "transportadora" | "encurtador" | "perfil" | "atividades";
 
 export default function Dashboard({ onLogout }: DashboardProps) {
   const [activeView, setActiveView] = useState<ActiveView>("dashboard");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showShortener, setShowShortener] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    return (localStorage.getItem("theme") as "dark" | "light") || "dark";
+  });
 
   const utils = trpc.useUtils();
   const appsQuery = trpc.apps.list.useQuery();
   const deleteAppMutation = trpc.apps.delete.useMutation({
-    onSuccess: () => utils.apps.list.invalidate(),
+    onSuccess: () => {
+      utils.apps.list.invalidate();
+      utils.stats.get.invalidate();
+      utils.activity.list.invalidate();
+      utils.notifications.list.invalidate();
+    },
   });
 
   const handleNavClick = (view: ActiveView) => {
@@ -31,11 +45,16 @@ export default function Dashboard({ onLogout }: DashboardProps) {
     } else if (view === "encurtador") {
       setShowShortener(true);
       setShowCreateModal(false);
+    } else if (view === "perfil") {
+      setShowProfile(true);
+      setShowCreateModal(false);
+      setShowShortener(false);
     } else {
       setShowCreateModal(false);
       setShowShortener(false);
     }
     setActiveView(view);
+    setShowNotifications(false);
   };
 
   const handleCreateNew = () => {
@@ -48,12 +67,21 @@ export default function Dashboard({ onLogout }: DashboardProps) {
     }
   };
 
+  const toggleTheme = () => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+  };
+
   return (
-    <div className="dashboard-layout">
+    <div className={`dashboard-layout ${theme === "light" ? "theme-light" : ""}`}>
       <Sidebar
         activeView={activeView}
         onNavClick={handleNavClick}
         onLogout={onLogout}
+        onToggleNotifications={() => setShowNotifications(!showNotifications)}
+        onToggleTheme={toggleTheme}
+        theme={theme}
       />
 
       <main className="dashboard-main">
@@ -63,8 +91,12 @@ export default function Dashboard({ onLogout }: DashboardProps) {
         <div className="dashboard-content">
           {activeView === "transportadora" ? (
             <TransportPanel />
+          ) : activeView === "atividades" ? (
+            <ActivityLog />
           ) : (
             <>
+              <StatsCards />
+
               <AppCards
                 apps={appsQuery.data ?? []}
                 onDelete={handleDeleteApp}
@@ -89,6 +121,14 @@ export default function Dashboard({ onLogout }: DashboardProps) {
 
         {showShortener && (
           <LinkShortener onClose={() => setShowShortener(false)} />
+        )}
+
+        {showProfile && (
+          <ProfileModal onClose={() => { setShowProfile(false); setActiveView("dashboard"); }} />
+        )}
+
+        {showNotifications && (
+          <NotificationPanel onClose={() => setShowNotifications(false)} />
         )}
       </main>
     </div>

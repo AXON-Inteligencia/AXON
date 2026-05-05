@@ -25,6 +25,14 @@ import {
   getAppById,
   getClientByOrderNumber,
   getTrackingConfigByUserId,
+  updateUserProfile,
+  getStats,
+  listActivityLogs,
+  createActivityLog,
+  listNotifications,
+  createNotification,
+  markNotificationRead,
+  markAllNotificationsRead,
 } from "./db.ts";
 import * as jose from "jose";
 
@@ -124,6 +132,32 @@ const authRouter = t.router({
   logout: protectedProcedure.mutation(async () => {
     return { success: true };
   }),
+
+  updateProfile: protectedProcedure
+    .input(
+      z.object({
+        name: z.string().min(1).optional(),
+        email: z.string().email().optional(),
+        currentPassword: z.string().optional(),
+        newPassword: z.string().min(6).optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.newPassword && input.currentPassword) {
+        const user = await getUserById(ctx.userId);
+        if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+        const valid = await verifyPassword(input.currentPassword, user.password);
+        if (!valid) throw new TRPCError({ code: "UNAUTHORIZED", message: "Senha atual incorreta" });
+      }
+      await updateUserProfile(ctx.userId, {
+        name: input.name,
+        email: input.email,
+        password: input.newPassword,
+      });
+      await createActivityLog(ctx.userId, "Perfil atualizado", "Dados do perfil foram alterados");
+      const updated = await getUserById(ctx.userId);
+      return { id: updated!.id, email: updated!.email, name: updated!.name, role: updated!.role };
+    }),
 });
 
 const appsRouter = t.router({
@@ -149,18 +183,24 @@ const appsRouter = t.router({
   create: protectedProcedure
     .input(createAppSchema)
     .mutation(async ({ ctx, input }) => {
-      return createApp(ctx.userId, input);
+      const result = await createApp(ctx.userId, input);
+      await createActivityLog(ctx.userId, "App criado", `App "${input.name}" foi criado`);
+      await createNotification(ctx.userId, "App Criado", `O app "${input.name}" foi criado com sucesso!`, "success");
+      return result;
     }),
 
   update: protectedProcedure
     .input(updateAppSchema)
     .mutation(async ({ ctx, input }) => {
-      return updateApp(ctx.userId, input);
+      const result = await updateApp(ctx.userId, input);
+      await createActivityLog(ctx.userId, "App atualizado", `App "${input.name}" foi atualizado`);
+      return result;
     }),
 
   delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
+      await createActivityLog(ctx.userId, "App deletado", `App #${input.id} foi deletado`);
       return deleteApp(ctx.userId, input.id);
     }),
 });
@@ -209,11 +249,44 @@ const trackingRouter = t.router({
     }),
 });
 
+const statsRouter = t.router({
+  get: protectedProcedure.query(async ({ ctx }) => {
+    return getStats(ctx.userId);
+  }),
+});
+
+const activityRouter = t.router({
+  list: protectedProcedure.query(async ({ ctx }) => {
+    return listActivityLogs(ctx.userId);
+  }),
+});
+
+const notificationsRouter = t.router({
+  list: protectedProcedure.query(async ({ ctx }) => {
+    return listNotifications(ctx.userId);
+  }),
+
+  markRead: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await markNotificationRead(ctx.userId, input.id);
+      return { success: true };
+    }),
+
+  markAllRead: protectedProcedure.mutation(async ({ ctx }) => {
+    await markAllNotificationsRead(ctx.userId);
+    return { success: true };
+  }),
+});
+
 export const appRouter = t.router({
   auth: authRouter,
   apps: appsRouter,
   clients: clientsRouter,
   tracking: trackingRouter,
+  stats: statsRouter,
+  activity: activityRouter,
+  notifications: notificationsRouter,
 });
 
 export type AppRouter = typeof appRouter;
