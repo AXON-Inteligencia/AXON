@@ -33,6 +33,8 @@ import {
   createNotification,
   markNotificationRead,
   markAllNotificationsRead,
+  listAllUsers,
+  deleteUser,
 } from "./db.ts";
 import * as jose from "jose";
 
@@ -279,6 +281,50 @@ const notificationsRouter = t.router({
   }),
 });
 
+const adminRouter = t.router({
+  listUsers: protectedProcedure.query(async ({ ctx }) => {
+    const user = await getUserById(ctx.userId);
+    if (!user || user.role !== "admin") {
+      throw new TRPCError({ code: "FORBIDDEN", message: "Acesso restrito ao admin" });
+    }
+    return listAllUsers();
+  }),
+
+  createUser: protectedProcedure
+    .input(z.object({
+      email: z.string().email(),
+      password: z.string().min(6),
+      name: z.string().min(1),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await getUserById(ctx.userId);
+      if (!user || user.role !== "admin") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Acesso restrito ao admin" });
+      }
+      const existing = await findUserByEmail(input.email);
+      if (existing) {
+        throw new TRPCError({ code: "CONFLICT", message: "Email já cadastrado" });
+      }
+      const result = await registerUser(input.email, input.password, input.name);
+      await createActivityLog(ctx.userId, "Usuário criado", `Novo usuário "${input.name}" (${input.email}) criado`);
+      return result;
+    }),
+
+  deleteUser: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const user = await getUserById(ctx.userId);
+      if (!user || user.role !== "admin") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Acesso restrito ao admin" });
+      }
+      if (input.id === ctx.userId) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Não pode deletar a si mesmo" });
+      }
+      await createActivityLog(ctx.userId, "Usuário deletado", `Usuário #${input.id} foi removido`);
+      return deleteUser(input.id);
+    }),
+});
+
 export const appRouter = t.router({
   auth: authRouter,
   apps: appsRouter,
@@ -287,6 +333,7 @@ export const appRouter = t.router({
   stats: statsRouter,
   activity: activityRouter,
   notifications: notificationsRouter,
+  admin: adminRouter,
 });
 
 export type AppRouter = typeof appRouter;

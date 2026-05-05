@@ -10,12 +10,13 @@ import StatsCards from "../components/StatsCards";
 import ProfileModal from "../components/ProfileModal";
 import NotificationPanel from "../components/NotificationPanel";
 import ActivityLog from "../components/ActivityLog";
+import UserManagement from "../components/UserManagement";
 
 interface DashboardProps {
   onLogout: () => void;
 }
 
-type ActiveView = "dashboard" | "playstore" | "transportadora" | "encurtador" | "perfil" | "atividades";
+type ActiveView = "dashboard" | "playstore" | "transportadora" | "encurtador" | "perfil" | "atividades" | "usuarios";
 
 export default function Dashboard({ onLogout }: DashboardProps) {
   const [activeView, setActiveView] = useState<ActiveView>("dashboard");
@@ -93,6 +94,8 @@ export default function Dashboard({ onLogout }: DashboardProps) {
             <TransportPanel />
           ) : activeView === "atividades" ? (
             <ActivityLog />
+          ) : activeView === "usuarios" ? (
+            <UserManagement />
           ) : (
             <>
               <AppCards

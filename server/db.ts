@@ -326,3 +326,20 @@ export async function markAllNotificationsRead(userId: number) {
   db.update(notifications).set({ read: 1 }).where(eq(notifications.userId, userId)).run();
   persistDb();
 }
+
+export async function listAllUsers() {
+  const db = await getDb();
+  return db.select({ id: users.id, email: users.email, name: users.name, role: users.role }).from(users).all();
+}
+
+export async function deleteUser(userId: number) {
+  const db = await getDb();
+  db.delete(apps).where(eq(apps.userId, userId)).run();
+  db.delete(clients).where(eq(clients.userId, userId)).run();
+  db.delete(trackingConfigs).where(eq(trackingConfigs.userId, userId)).run();
+  db.delete(activityLogs).where(eq(activityLogs.userId, userId)).run();
+  db.delete(notifications).where(eq(notifications.userId, userId)).run();
+  db.delete(users).where(eq(users.id, userId)).run();
+  persistDb();
+  return { success: true };
+}

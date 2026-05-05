@@ -3,7 +3,7 @@ import { Bell } from "lucide-react";
 
 interface SidebarProps {
   activeView: string;
-  onNavClick: (view: "dashboard" | "playstore" | "transportadora" | "encurtador" | "perfil" | "atividades") => void;
+  onNavClick: (view: "dashboard" | "playstore" | "transportadora" | "encurtador" | "perfil" | "atividades" | "usuarios") => void;
   onLogout: () => void;
   onToggleNotifications: () => void;
   onToggleTheme: () => void;
@@ -17,6 +17,7 @@ const menuItems = [
   { id: "encurtador" as const, label: "Encurtador de link" },
   { id: "atividades" as const, label: "Historico de Atividades" },
   { id: "perfil" as const, label: "Meu Perfil" },
+  { id: "usuarios" as const, label: "Gerenciar Usuarios" },
 ];
 
 export default function Sidebar({ activeView, onNavClick, onLogout, onToggleNotifications, onToggleTheme, theme }: SidebarProps) {
