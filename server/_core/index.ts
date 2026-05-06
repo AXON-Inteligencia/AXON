@@ -16,6 +16,10 @@ async function main() {
   const app = express();
   app.use(express.json());
 
+  app.get("/api/health", (_req, res) => {
+    res.json({ status: "ok", timestamp: Date.now() });
+  });
+
   app.use(
     "/api/trpc",
     createExpressMiddleware({
@@ -52,6 +56,20 @@ async function main() {
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);
+
+    // Self-ping to prevent Render free tier from sleeping
+    if (!isDev) {
+      const RENDER_URL = process.env.RENDER_EXTERNAL_URL;
+      if (RENDER_URL) {
+        setInterval(async () => {
+          try {
+            await fetch(`${RENDER_URL}/api/health`);
+          } catch (_) {
+            // ignore errors
+          }
+        }, 4 * 60 * 1000); // every 4 minutes
+      }
+    }
   });
 }
 

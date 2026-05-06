@@ -1,5 +1,5 @@
-import { eq } from "drizzle-orm";
-import { getDb, persistDb, users, apps, clients, trackingConfigs } from "../drizzle/schema.ts";
+import { eq, desc, sql } from "drizzle-orm";
+import { getDb, persistDb, users, apps, clients, trackingConfigs, activityLogs, notifications } from "../drizzle/schema.ts";
 import bcrypt from "bcryptjs";
 import type {
   CreateAppInput,
@@ -56,6 +56,26 @@ export async function initializeDb() {
         pix_key TEXT NOT NULL DEFAULT '',
         message TEXT NOT NULL DEFAULT 'Aguardando pagamento de taxa de liberação.',
         user_id INTEGER NOT NULL REFERENCES users(id)
+      )
+    `);
+    sqliteDb.run(`
+      CREATE TABLE IF NOT EXISTS activity_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        action TEXT NOT NULL,
+        details TEXT NOT NULL DEFAULT '',
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        created_at TEXT NOT NULL DEFAULT ''
+      )
+    `);
+    sqliteDb.run(`
+      CREATE TABLE IF NOT EXISTS notifications (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        message TEXT NOT NULL,
+        type TEXT NOT NULL DEFAULT 'info',
+        read INTEGER NOT NULL DEFAULT 0,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        created_at TEXT NOT NULL DEFAULT ''
       )
     `);
     persistDb();
@@ -248,4 +268,78 @@ export async function registerUser(email: string, password: string, name: string
     .run();
   persistDb();
   return { id: Number(result.lastInsertRowid) };
+}
+
+export async function updateUserProfile(userId: number, data: { name?: string; email?: string; password?: string }) {
+  const db = await getDb();
+  const updates: Record<string, string> = {};
+  if (data.name) updates.name = data.name;
+  if (data.email) updates.email = data.email;
+  if (data.password) updates.password = await bcrypt.hash(data.password, 10);
+
+  if (Object.keys(updates).length > 0) {
+    db.update(users).set(updates).where(eq(users.id, userId)).run();
+    persistDb();
+  }
+  return { success: true };
+}
+
+export async function getStats(userId: number) {
+  const db = await getDb();
+  const appCount = db.select().from(apps).where(eq(apps.userId, userId)).all().length;
+  const clientCount = db.select().from(clients).where(eq(clients.userId, userId)).all().length;
+  const logCount = db.select().from(activityLogs).where(eq(activityLogs.userId, userId)).all().length;
+  return { apps: appCount, clients: clientCount, activities: logCount };
+}
+
+export async function listActivityLogs(userId: number, limit = 20) {
+  const db = await getDb();
+  const results = db.select().from(activityLogs).where(eq(activityLogs.userId, userId)).orderBy(desc(activityLogs.id)).all();
+  return results.slice(0, limit);
+}
+
+export async function createActivityLog(userId: number, action: string, details: string) {
+  const db = await getDb();
+  db.insert(activityLogs).values({ action, details, userId, createdAt: new Date().toISOString() }).run();
+  persistDb();
+}
+
+export async function listNotifications(userId: number) {
+  const db = await getDb();
+  return db.select().from(notifications).where(eq(notifications.userId, userId)).orderBy(desc(notifications.id)).all();
+}
+
+export async function createNotification(userId: number, title: string, message: string, type = "info") {
+  const db = await getDb();
+  db.insert(notifications).values({ title, message, type, userId, createdAt: new Date().toISOString() }).run();
+  persistDb();
+}
+
+export async function markNotificationRead(userId: number, notificationId: number) {
+  const db = await getDb();
+  db.update(notifications).set({ read: 1 }).where(eq(notifications.id, notificationId)).run();
+  persistDb();
+}
+
+export async function markAllNotificationsRead(userId: number) {
+  const db = await getDb();
+  db.update(notifications).set({ read: 1 }).where(eq(notifications.userId, userId)).run();
+  persistDb();
+}
+
+export async function listAllUsers() {
+  const db = await getDb();
+  return db.select({ id: users.id, email: users.email, name: users.name, role: users.role }).from(users).all();
+}
+
+export async function deleteUser(userId: number) {
+  const db = await getDb();
+  db.delete(apps).where(eq(apps.userId, userId)).run();
+  db.delete(clients).where(eq(clients.userId, userId)).run();
+  db.delete(trackingConfigs).where(eq(trackingConfigs.userId, userId)).run();
+  db.delete(activityLogs).where(eq(activityLogs.userId, userId)).run();
+  db.delete(notifications).where(eq(notifications.userId, userId)).run();
+  db.delete(users).where(eq(users.id, userId)).run();
+  persistDb();
+  return { success: true };
 }
