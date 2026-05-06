@@ -8,26 +8,29 @@ interface SidebarProps {
   onToggleNotifications: () => void;
   onToggleTheme: () => void;
   theme: "dark" | "light";
+  userRole: string;
 }
 
 const menuItems = [
-  { id: "dashboard" as const, label: "Dashboard" },
-  { id: "playstore" as const, label: "Criar/Editar Play store" },
-  { id: "transportadora" as const, label: "Painel Transportadora" },
-  { id: "encurtador" as const, label: "Encurtador de link" },
-  { id: "atividades" as const, label: "Historico de Atividades" },
-  { id: "perfil" as const, label: "Meu Perfil" },
-  { id: "usuarios" as const, label: "Gerenciar Usuarios" },
+  { id: "dashboard" as const, label: "Dashboard", adminOnly: false },
+  { id: "playstore" as const, label: "Criar/Editar Play store", adminOnly: false },
+  { id: "transportadora" as const, label: "Painel Transportadora", adminOnly: false },
+  { id: "encurtador" as const, label: "Encurtador de link", adminOnly: false },
+  { id: "atividades" as const, label: "Historico de Atividades", adminOnly: false },
+  { id: "perfil" as const, label: "Meu Perfil", adminOnly: true },
+  { id: "usuarios" as const, label: "Gerenciar Usuarios", adminOnly: true },
 ];
 
-export default function Sidebar({ activeView, onNavClick, onLogout, onToggleNotifications, onToggleTheme, theme }: SidebarProps) {
+export default function Sidebar({ activeView, onNavClick, onLogout, onToggleNotifications, onToggleTheme, theme, userRole }: SidebarProps) {
   const notifQuery = trpc.notifications.list.useQuery();
   const unreadCount = (notifQuery.data ?? []).filter((n) => !n.read).length;
+
+  const visibleItems = menuItems.filter((item) => !item.adminOnly || userRole === "admin");
 
   return (
     <aside className="sidebar">
       <nav className="sidebar-nav">
-        {menuItems.map((item) => (
+        {visibleItems.map((item) => (
           <a
             key={item.id}
             href="#"

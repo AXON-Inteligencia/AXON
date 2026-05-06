@@ -29,6 +29,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
   });
 
   const utils = trpc.useUtils();
+  const meQuery = trpc.auth.me.useQuery();
   const appsQuery = trpc.apps.list.useQuery();
   const deleteAppMutation = trpc.apps.delete.useMutation({
     onSuccess: () => {
@@ -83,6 +84,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
         onToggleNotifications={() => setShowNotifications(!showNotifications)}
         onToggleTheme={toggleTheme}
         theme={theme}
+        userRole={meQuery.data?.role ?? "user"}
       />
 
       <main className="dashboard-main">

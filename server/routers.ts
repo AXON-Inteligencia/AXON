@@ -145,9 +145,12 @@ const authRouter = t.router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const user = await getUserById(ctx.userId);
+      if (!user) throw new TRPCError({ code: "NOT_FOUND" });
+      if (user.role !== "admin") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Apenas o admin pode alterar credenciais" });
+      }
       if (input.newPassword && input.currentPassword) {
-        const user = await getUserById(ctx.userId);
-        if (!user) throw new TRPCError({ code: "NOT_FOUND" });
         const valid = await verifyPassword(input.currentPassword, user.password);
         if (!valid) throw new TRPCError({ code: "UNAUTHORIZED", message: "Senha atual incorreta" });
       }
