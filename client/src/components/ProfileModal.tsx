@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { trpc } from "../lib/trpc";
 import { User, Mail, Lock, Save, X } from "lucide-react";
 
@@ -10,8 +10,15 @@ export default function ProfileModal({ onClose }: ProfileModalProps) {
   const meQuery = trpc.auth.me.useQuery();
   const utils = trpc.useUtils();
 
-  const [name, setName] = useState(meQuery.data?.name ?? "");
-  const [email, setEmail] = useState(meQuery.data?.email ?? "");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    if (meQuery.data) {
+      setName(meQuery.data.name);
+      setEmail(meQuery.data.email);
+    }
+  }, [meQuery.data]);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
