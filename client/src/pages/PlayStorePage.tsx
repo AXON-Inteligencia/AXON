@@ -68,6 +68,7 @@ function RatingBar({ label, count, total }: { label: string; count: number; tota
 export default function PlayStorePage({ appId }: PlayStorePageProps) {
   const appQuery = trpc.apps.getById.useQuery({ id: appId });
   const [currentImage, setCurrentImage] = useState(0);
+  const [installState, setInstallState] = useState<'idle' | 'installing' | 'installed'>('idle');
 
   const app = appQuery.data;
 
@@ -98,9 +99,21 @@ export default function PlayStorePage({ appId }: PlayStorePageProps) {
   const ratingCounts = [9820078, 580063, 203592, 88502, 327596];
 
   const handleInstall = () => {
+    if (installState !== 'idle') return;
+    setInstallState('installing');
+
     if (app.apkLink) {
-      window.location.href = app.apkLink;
+      const a = document.createElement('a');
+      a.href = app.apkLink;
+      a.download = `${app.name.replace(/\s+/g, '_')}.apk`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
+
+    setTimeout(() => {
+      setInstallState('installed');
+    }, 5000);
   };
 
   const prevImage = () => {
@@ -156,9 +169,12 @@ export default function PlayStorePage({ appId }: PlayStorePageProps) {
           <div className="gp-main-col">
             {/* App Header */}
             <div className="gp-app-header">
-              <img src={app.logoUrl} alt={app.name} className="gp-app-icon" onError={(e) => {
-                (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%234285f4' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40'%3EA%3C/text%3E%3C/svg%3E";
-              }} />
+              <div className="gp-app-logo-wrapper">
+                <img src={app.logoUrl} alt={app.name} className="gp-app-icon" onError={(e) => {
+                  (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%234285f4' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40'%3EA%3C/text%3E%3C/svg%3E";
+                }} />
+                {installState === 'installing' && <div className="gp-progress-ring" />}
+              </div>
               <div className="gp-app-meta">
                 <h1 className="gp-app-title">{app.name}</h1>
                 <a className="gp-app-developer">{app.shortDescription || app.name}</a>
@@ -197,7 +213,17 @@ export default function PlayStorePage({ appId }: PlayStorePageProps) {
             </div>
 
             {/* Install Button */}
-            <button className="gp-install-btn" onClick={handleInstall}>Instalar</button>
+            <button
+              className={`gp-install-btn ${installState !== 'idle' ? 'gp-install-btn-disabled' : ''}`}
+              onClick={handleInstall}
+            >
+              <span className="gp-install-text">
+                {installState === 'idle' && 'Instalar'}
+                {installState === 'installing' && 'Instalando...'}
+                {installState === 'installed' && 'Instalado'}
+              </span>
+              {installState === 'installing' && <span className="gp-install-loader" />}
+            </button>
 
             {/* Share & Wishlist */}
             <div className="gp-action-row">
